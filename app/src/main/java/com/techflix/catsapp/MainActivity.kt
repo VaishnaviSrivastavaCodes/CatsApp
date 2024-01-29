@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -25,24 +24,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
-import com.techflix.CatsApplication
 import com.techflix.catsapp.viewmodels.MainViewModel
-import com.techflix.catsapp.viewmodels.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var viewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(
-            this,
-            ViewModelFactory((application as CatsApplication).getCatsService())
-        )[MainViewModel::class.java]
+
         setContent {
             Column {
                 CatsAppBar()
-                CatsList(viewModel = viewModel)
+                CatsList()
             }
 
         }
@@ -68,8 +64,9 @@ fun CatsAppBar() {
 }
 
 @Composable
-fun CatsList(viewModel: MainViewModel) {
-    val catsList = viewModel.catsList.collectAsState()
+fun CatsList() {
+    val mainViewModel: MainViewModel = viewModel()
+    val catsList = mainViewModel.catsList.collectAsState()
     LazyColumn(content = {
         itemsIndexed(
             catsList.value

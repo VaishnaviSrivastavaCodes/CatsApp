@@ -5,13 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.techflix.catsapp.api.CatDataItem
 import com.techflix.catsapp.api.CatsService
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(private val catsService: CatsService) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject
+constructor(private val catsService: CatsService) : ViewModel() {
     private val limit = 20
     private val _catsList = MutableStateFlow<List<CatDataItem>>(listOf())
     val catsList: StateFlow<List<CatDataItem>>
